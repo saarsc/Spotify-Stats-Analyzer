@@ -1,0 +1,9 @@
+venv*
+.vscode*
+__pycache__
+.cache
+songs_cache
+*log
+*.db
+*.csv
+*.json
