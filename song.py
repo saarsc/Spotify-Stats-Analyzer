@@ -1,11 +1,16 @@
 import hashlib
+from datetime import datetime
 
+from requests import delete
 class Song():
-  def __init__(self, name: str, album: str, artist: str, timestamp:str, metadata={}, spotify_id:str=None) -> None:
+  def __init__(self, name: str="", album: str="", artist: str="", timestamp:str="", spotify_id:str=None, **kwargs) -> None:
     self.name = name
     self.album = album
     self.artist = artist
-    self.timestamp = timestamp
+    try:
+      self.timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+      self.timestamp = timestamp
     self._metadata = {}
     self.spotify_id = spotify_id
 
@@ -60,7 +65,35 @@ class Song():
     if isinstance(other, Song):
       return (self.key == other.key)
     else:
-        return False 
+      return False 
 
   def __hash__(self) -> int:
     return hash(self.key)
+  
+  def __getitem__(self, key):
+    return self.__getattribute__(key)
+  
+  def __add__(self, other) -> dict:
+    song = Song()
+    if (isinstance(other, Song)):
+      song.metadata = {
+        k: (self.metadata.get(k) or 0) + (other.metadata.get(k) or 0)
+        for k in self.metadata
+      }
+    else:
+      song.metadata = {
+        k: (self.metadata.get(k) or 0) + (other["metadata"].get(k) or 0)
+        for k in self.metadata
+      }
+    return song
+  
+  def as_dict(self):
+    as_dict = self.__dict__
+    if "_metadata" in as_dict:
+      as_dict = {
+        **as_dict,
+        **self.metadata
+      }
+      del as_dict["_metadata"]
+
+    return as_dict 

@@ -25,3 +25,20 @@ class SongEntrie(Base):
   duration_ms = Column("duration_ms", Float)
   time_signature = Column("time_signature", Float)
   spotify_id = Column("spotify_id", String)
+
+  def get_metadata(self):
+    return {
+      "danceability": self.danceability,
+      "energy": self.energy,
+      "key": self.key,
+      "loudness": self.loudness,
+      "mode": self.mode,
+      "speechiness": self.speechiness,
+      "acousticness": self.acousticness,
+      "instrumentalness": self.instrumentalness,
+      "liveness": self.liveness,
+      "valence": self.valence,
+      "tempo": self.tempo,
+      "duration_ms": self.duration_ms,
+      "time_signature": self.time_signature 
+    }
