@@ -1,5 +1,5 @@
 from typing import Literal
-from song import Song
+from src.song import Song
 
 TIME_PERIODS = Literal["year", "week", "weekday", "month", "date"]
 

@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 import csv
 import json
-from song import Song
+from src.song import Song
 
 class Importer:
   def __init__(self, as_csv=True, filename="out") -> None:

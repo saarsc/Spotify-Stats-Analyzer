@@ -1,10 +1,10 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from creds import *
-from song import Song
+from src.creds import *
+from src.song import Song
 from termcolor import colored
-import utils
-import db
+import src.utils as utils
+import src.db as db
 from typing import *
 
 class SpotifyApi():
@@ -26,7 +26,9 @@ class SpotifyApi():
       }
       db.insert_row(song)
       print(colored(f"{song.query} not found", "red"))
-
+    # TODO: 
+    # Need to rewrite this to one API call.
+    # So Search by name -> filter results by artist -> by album.
     try:
       result = self.sp.search(song.query)
       assert result["tracks"]["items"][0]

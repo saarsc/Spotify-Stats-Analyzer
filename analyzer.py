@@ -1,10 +1,10 @@
-from importer import Importer
-from groupper import Groupper
-import db
+from src.importer import Importer
+from src.groupper import Groupper
+import src.db as db
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-from utils import sort_by_date
+from src.utils import sort_by_date
 
 data = Importer().import_data()
 groupper = Groupper(data)

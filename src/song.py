@@ -1,7 +1,5 @@
 import hashlib
 from datetime import datetime
-
-from requests import delete
 class Song():
   def __init__(self, name: str="", album: str="", artist: str="", timestamp:str="", spotify_id:str=None, **kwargs) -> None:
     self.name = name

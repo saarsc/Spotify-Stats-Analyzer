@@ -1,6 +1,6 @@
-from api import SpotifyApi
+from src.api import SpotifyApi
 from  pprint import pprint
-from importer import Importer
+from src.importer import Importer
 
 importer = Importer()
 data = importer.import_data()

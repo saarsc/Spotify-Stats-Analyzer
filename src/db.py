@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from song import Song
-from song_entrie import SongEntrie
+from src.song import Song
+from src.song_entrie import SongEntrie
 
 conn = create_engine("sqlite:///songs.db", echo=True)
 session = sessionmaker(bind=conn)()
