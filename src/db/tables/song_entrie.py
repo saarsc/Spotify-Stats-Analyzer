@@ -1,16 +1,19 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Float, String, Integer
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Float, String, Integer, ForeignKey
+from .base_table import BaseTable
+from ..db_config import Base
 
-Base = declarative_base()
-
-class SongEntrie(Base):
+class SongEntrie(BaseTable, Base):
   __tablename__ = "songs"
 
-  id = Column("id", Integer, primary_key= True)
+  artist_id = Column(Integer, ForeignKey("artist.id"))
+
+  album_id = Column(Integer, ForeignKey("album.id"))
+  
+  artist = relationship("Artist", back_populates="songs")
+  album = relationship("Album", back_populates="songs") 
+  
   song_key = Column("song_key", String)
-  artist = Column("artist", String)
-  album = Column("album", String)
-  name = Column("name", String)
   danceability = Column("danceability", Float)
   energy = Column("energy", Float)
   key = Column("key", Float)
@@ -24,8 +27,19 @@ class SongEntrie(Base):
   tempo = Column("tempo", Float)
   duration_ms = Column("duration_ms", Float)
   time_signature = Column("time_signature", Float)
-  spotify_id = Column("spotify_id", String)
 
+
+  def by_key(self, key):
+    return self.base_query.filter(self.table.song_key == key).first()
+
+  def by_keys(self, keys):
+    return self.base_query.filter(
+      SongEntrie.song_key.in_(list(keys))
+    ).all()
+
+  def existing_keys(self):
+    return self.session.query(SongEntrie.song_key).all()
+  
   def get_metadata(self):
     return {
       "danceability": self.danceability,

@@ -1,6 +1,6 @@
 from src.importer import Importer
 from src.groupper import Groupper
-import src.db as db
+import db.db_handler as db_handler
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
@@ -14,7 +14,7 @@ grouped_songs = groupper.data
 
 songs_metdata = {
   song.song_key: song
-  for song in db.by_keys(grouped_songs.keys())
+  for song in db_handler.by_keys(grouped_songs.keys())
 }
 
 for key, songs in grouped_songs.items():

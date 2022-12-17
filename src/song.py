@@ -1,10 +1,13 @@
 import hashlib
 from datetime import datetime
+from typing import Union
+from .db.tables.album_table import Album 
+from .db.tables.artist_table import Artist 
 class Song():
   def __init__(self, name: str="", album: str="", artist: str="", timestamp:str="", spotify_id:str=None, **kwargs) -> None:
-    self.name = name
-    self.album = album
-    self.artist = artist
+    self.name: str = name
+    self.album: Union[Album, str] = album or name
+    self.artist: Union[Artist, str] = artist
     try:
       self.timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
     except ValueError:

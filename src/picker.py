@@ -1,7 +1,7 @@
 from .groupper import Groupper
 from .song import Song
-from .song_entrie import SongEntrie
-from . import db
+from .db.tables.song_entrie import SongEntrie
+from .db import db
 from .classifier.time_classifier import TimeClassifier
 
 class Picker:

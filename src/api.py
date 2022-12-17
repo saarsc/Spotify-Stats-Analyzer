@@ -4,7 +4,7 @@ from src.creds import *
 from src.song import Song
 from termcolor import colored
 import src.utils as utils
-import src.db as db
+from .db.db import insert_song, insert_songs, existing_songs_keys, find_or_create_album
 from typing import *
 
 class SpotifyApi():
@@ -24,44 +24,39 @@ class SpotifyApi():
       song.metadata = {
         "spotify_id": None
       }
-      db.insert_row(song)
+      insert_song(song)
       print(colored(f"{song.query} not found", "red"))
-    # TODO: 
-    # Need to rewrite this to one API call.
-    # So Search by name -> filter results by artist -> by album.
-    try:
-      result = self.sp.search(song.query)
-      assert result["tracks"]["items"][0]
-    except:
-      try:
-        result = self.sp.search(song.simple_query)
-        assert result["tracks"]["items"][0]
-      except:
-        try:
-          result = self.sp.search(song.name)
-        except:
-          save_invalid_song(song)
-          return None
+    
+    def locate_song(item: dict) -> bool:
+      return (
+        [
+          artist["name"].lower() == song.artist.lower()
+          for artist in item["artists"]
+        ] or 
+        song.album.lower() in item["album"]["name"].lower()
+      )
 
-        item = [
-          item
-          for item in result["tracks"]["items"]
-          if item["artists"][0]["name"] == song.artist or item["album"]["name"] == song.album
-        ]
-          
-        result["tracks"]["items"] = item
-  
-    try: 
-      id = result["tracks"]["items"][0]['id']
+    try:
+      item = None
+      for query in [song.name, song.simple_query, song.query]:
+        result = self.sp.search(query)
+        if items := result.get("tracks", {}).get("items"):
+          item = list(filter(locate_song, items))
+          if item:
+            break
+      
+      assert item, Exception(f"Song #{song.name} not found")
+
+      id = item[0]['id']
       song.spotify_id = id
       return id
-    except IndexError:
+    except: 
       save_invalid_song(song)
 
   def get_songs_features(self, songs: list[Song]):
     in_db:list[str] = [
       key[0]
-      for key in db.existing_keys()
+      for key in existing_songs_keys()
     ]
     chunks:Generator[list[Song]] = utils.split_to_chunks([
       song for song in set(songs)
@@ -83,7 +78,7 @@ class SpotifyApi():
         song = chunk[i]
         song.metadata = r or {}
 
-      db.insert_rows(chunk)
+      insert_songs(chunk)
       
       
     songs = [song for chunk in chunks for song in chunk]
