@@ -9,10 +9,10 @@ from .db import db
 class Picker:
   def __init__(self, data: list[Song]) -> None:
     self.data = data
-  
+
   def process_data(self):
     self.classified_songs
-  
+
   @cached_property
   def classified_songs(self):
     return BaseClassifier(self.songs).classifiy_songs()
@@ -33,7 +33,7 @@ class Picker:
           song.metadata = song_info.get_metadata()
           song.artist = song_info.artist
           song.album = song_info.album
-          
+
         data += songs
-    
+
     return data

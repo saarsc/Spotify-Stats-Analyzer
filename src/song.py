@@ -2,8 +2,8 @@ from functools import cached_property
 import hashlib
 from datetime import datetime
 from typing import Union
-from .db.tables.album_table import Album 
-from .db.tables.artist_table import Artist 
+from .db.tables.album_table import Album
+from .db.tables.artist_table import Artist
 class Song():
   def __init__(self, name: str="", album: str="", artist: str="", timestamp:str="", spotify_id:str=None, **kwargs) -> None:
     self.name: str = name
@@ -19,7 +19,7 @@ class Song():
   @cached_property
   def query(self) -> str:
     return f"track:{self.name} artist:{self.artist} album:{self.album}".replace("'", "")
-  
+
   @cached_property
   def simple_query(self):
     return f"track:{self.name} artist:{self.artist}".replace("'", "")
@@ -43,9 +43,9 @@ class Song():
       "valence": self._metadata.get("valence"),
       "tempo": self._metadata.get("tempo"),
       "duration_ms": self._metadata.get("duration_ms"),
-      "time_signature": self._metadata.get("time_signature")    
+      "time_signature": self._metadata.get("time_signature")
     }
-  
+
   @metadata.setter
   def metadata(self, value):
     self._metadata = value
@@ -59,7 +59,7 @@ class Song():
       "spotify_id": self.spotify_id,
       **self.metadata
     }
-  
+
   def __repr__(self) -> str:
     return self.query
 
@@ -67,14 +67,14 @@ class Song():
     if isinstance(other, Song):
       return (self.key == other.key)
     else:
-      return False 
+      return False
 
   def __hash__(self) -> int:
     return hash(self.key)
-  
+
   def __getitem__(self, key):
     return self.__getattribute__(key)
-  
+
   def __add__(self, other) -> dict:
     song = Song()
     if (isinstance(other, Song)):
@@ -88,7 +88,7 @@ class Song():
         for k in self.metadata
       }
     return song
-  
+
   def to_dict(self):
     return {
       **self.metadata,

@@ -3,7 +3,7 @@ from ..db.tables.song_entrie import SongEntrie
 class BaseClassifier:
   def __init__(self, data: list[SongEntrie]) -> None:
     self.data = data
-  
+
   def classifiy_songs(self):
     return [
       {
@@ -12,8 +12,8 @@ class BaseClassifier:
       }
       for song in self.data
     ]
-    
-  def _classifiy_date(self, song: Song): 
+
+  def _classifiy_date(self, song: Song):
     if timestamp := song.timestamp:
       return {
         "minute": timestamp.minute,

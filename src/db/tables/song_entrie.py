@@ -9,10 +9,10 @@ class SongEntrie(BaseTable, Base):
   artist_id = Column(Integer, ForeignKey("artist.id"))
 
   album_id = Column(Integer, ForeignKey("album.id"))
-  
+
   artist = relationship("Artist", back_populates="songs")
-  album = relationship("Album", back_populates="songs") 
-  
+  album = relationship("Album", back_populates="songs")
+
   song_key = Column("song_key", String)
   danceability = Column("danceability", Float)
   energy = Column("energy", Float)
@@ -39,7 +39,7 @@ class SongEntrie(BaseTable, Base):
 
   def existing_keys(self):
     return self.session.query(SongEntrie.song_key).all()
-  
+
   def get_metadata(self):
     return {
       "danceability": self.danceability,
@@ -54,5 +54,5 @@ class SongEntrie(BaseTable, Base):
       "valence": self.valence,
       "tempo": self.tempo,
       "duration_ms": self.duration_ms,
-      "time_signature": self.time_signature 
+      "time_signature": self.time_signature
     }

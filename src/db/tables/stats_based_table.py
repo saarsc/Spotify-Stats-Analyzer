@@ -49,7 +49,7 @@ class StatsBasedTable(BaseTable):
   def avg_liveness(self):
     return  Column("avg_liveness", Float)
 
-  @declared_attr   
+  @declared_attr
   def avg_valence(self):
     return  Column("avg_valence", Float)
 
@@ -61,10 +61,10 @@ class StatsBasedTable(BaseTable):
   def avg_duration_ms(self):
     return  Column("avg_duration_ms", Float)
 
-  @property 
+  @property
   def column_name(self) -> str:
     return self.table.__name__.lower()
-  
+
   @cached_property
   def columns(self) -> list[str]:
     return [
@@ -72,14 +72,14 @@ class StatsBasedTable(BaseTable):
       for attr in dir(self)
       if "avg_" in attr
     ]
-  
+
   def calculate_stats(self):
     columns = []
     for col in self.columns:
       columns.append(
           func.round(
             func.cast(
-                func.avg(getattr(SongEntrie, col.replace("avg_", ""))), 
+                func.avg(getattr(SongEntrie, col.replace("avg_", ""))),
                 Numeric(10, 2)
             ),
             2
@@ -99,21 +99,21 @@ class StatsBasedTable(BaseTable):
           self.columns,
           itemgetter(*self.columns)(stat)
         )
-      
+
         for attr, val in stat_values:
           setattr(table_column, attr, val)
 
     self.session.commit()
-  
+
   def get_metadata(self) -> dict:
     return {
       "id": self.id,
       **{
         col: getattr(self, col)
         for col in self.columns
-      } 
+      }
     }
-  
+
   def as_dict(self):
     return {
       **self.get_metadata()

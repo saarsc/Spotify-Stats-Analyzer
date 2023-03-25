@@ -7,4 +7,3 @@ session = sessionmaker(bind=conn)()
 metadata = MetaData(bind=conn)
 
 metadata.create_all()
-

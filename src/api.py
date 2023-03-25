@@ -26,13 +26,13 @@ class SpotifyApi():
       }
       insert_song(song)
       print(colored(f"{song.query} not found", "red"))
-    
+
     def locate_song(item: dict) -> bool:
       return (
         [
           artist["name"].lower() == song.artist.lower()
           for artist in item["artists"]
-        ] or 
+        ] or
         song.album.lower() in item["album"]["name"].lower()
       )
 
@@ -44,13 +44,13 @@ class SpotifyApi():
           item = list(filter(locate_song, items))
           if item:
             break
-      
+
       assert item, Exception(f"Song #{song.name} not found")
 
       id = item[0]['id']
       song.spotify_id = id
       return id
-    except: 
+    except:
       save_invalid_song(song)
 
   def get_songs_features(self, songs: list[Song]):
@@ -79,8 +79,8 @@ class SpotifyApi():
         song.metadata = r or {}
 
       insert_songs(chunk)
-      
-      
+
+
     songs = [song for chunk in chunks for song in chunk]
-    
+
     return self.cache

@@ -1,6 +1,6 @@
 from typing import Generator, Union
 from src.song import Song
- 
+
 from .tables.song_entrie import SongEntrie
 from .tables.artist_table import Artist
 from .tables.album_table import Album
@@ -25,7 +25,7 @@ def insert_song(song: Song):
 
 def populate_artist_and_album(func):
   def populate(songs: list[Song]):
-    # This is ugly please don't look 
+    # This is ugly please don't look
     by_artist = Groupper(songs).by_artist()
     for artist, artist_songs in by_artist.items():
       by_album = Groupper(artist_songs).by_album()
@@ -36,7 +36,7 @@ def populate_artist_and_album(func):
         for song in album_songs:
           song.artist = artist
           song.album = album
-    
+
     func(songs)
 
   return populate
