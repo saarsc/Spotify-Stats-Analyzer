@@ -1,12 +1,11 @@
 from functools import reduce
 from itertools import groupby
-from typing import Union
 from src.song import Song
 from src.utils import prepare_list_for_group
 
 class Groupper():
   def __init__(self, data: list[Song]) -> None:
-    self.raw_data: Union[list[Song], dict] = data
+    self.raw_data = data
   
   @property
   def data(self) -> dict:
@@ -37,7 +36,18 @@ class Groupper():
       t = reduce(lambda x, y: dict((k, v + y[k]) for k, v in x.iteritems()), val)
   
   def by_song_key(self):
-    self.raw_data.sort(key= lambda x: x.key)
-    self._data = groupby(self.raw_data, lambda x: x.key)
-    return self.data
+    return self._by_field("key")
+  
+  def by_id(self):
+    return self._by_field("id")
 
+  def by_artist(self):
+    return self._by_field("artist")
+  
+  def by_album(self):
+    return self._by_field("artist")
+
+  def _by_field(self, field):
+    self.raw_data.sort(key= lambda x: getattr(x, field) or 0)
+    self._data = groupby(self.raw_data, lambda x: getattr(x, field) or 0)
+    return self.data

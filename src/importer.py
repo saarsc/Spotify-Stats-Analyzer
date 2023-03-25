@@ -12,7 +12,6 @@ class Importer:
     with self.data_file() as f:
       reader = csv.DictReader(f, )
       return self.parse_date(reader)
-      
 
   def import_json(self):
     with self.data_file() as f:

@@ -1,3 +1,4 @@
+from functools import cached_property
 import hashlib
 from datetime import datetime
 from typing import Union
@@ -15,11 +16,11 @@ class Song():
     self._metadata = {}
     self.spotify_id = spotify_id
 
-  @property
+  @cached_property
   def query(self) -> str:
     return f"track:{self.name} artist:{self.artist} album:{self.album}".replace("'", "")
   
-  @property
+  @cached_property
   def simple_query(self):
     return f"track:{self.name} artist:{self.artist}".replace("'", "")
 
@@ -88,13 +89,9 @@ class Song():
       }
     return song
   
-  def as_dict(self):
-    as_dict = self.__dict__
-    if "_metadata" in as_dict:
-      as_dict = {
-        **as_dict,
-        **self.metadata
-      }
-      del as_dict["_metadata"]
-
-    return as_dict 
+  def to_dict(self):
+    return {
+      **self.metadata,
+      "artist": self.artist.as_dict(),
+      "album": self.album.as_dict()
+    }

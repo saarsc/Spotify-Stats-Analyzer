@@ -58,5 +58,15 @@ class BaseTable():
     self.session.add(instance)
     return instance
 
+  def get_all(self):
+    return self.session.query(self.table).all()
+  
+  def by_id(self, id: str):
+    return self.base_query.filter(self.table.id == id).first()
+
+  def by_ids(self, ids):
+    return self.base_query.filter(
+      self.table.id.in_(list(ids))
+    ).all()
     
 
